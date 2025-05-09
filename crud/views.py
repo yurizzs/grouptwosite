@@ -76,3 +76,9 @@ def delete_gender(request, genderId):
             return render(request, 'gender/DeleteGender.html', data)
     except Exception as e:
         return HttpResponse(f'May Error tanga: {e}')
+    
+def add_user(request):
+    try:
+        return render(request, 'user/AddUser.html')
+    except Exception as e:
+        return HttpResponse(f'Error tanga: {e}')
