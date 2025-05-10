@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .models import Genders
+from .models import Genders, Users
+from django.contrib.auth.hashers import make_password
 
 # Create your views here.
 
@@ -77,8 +78,55 @@ def delete_gender(request, genderId):
     except Exception as e:
         return HttpResponse(f'May Error tanga: {e}')
     
+def user_list(reuqest):
+    try:
+        userObj = Users.objects.select_related('gender')
+        
+        data = {
+            'users':userObj
+        }
+        
+        return render(reuqest, 'user/UserList.html', data)
+    except Exception as e:
+        return HttpResponse(f'Error tanga: {e}')
+    
 def add_user(request):
     try:
-        return render(request, 'user/AddUser.html')
+        if request.method == 'POST':
+            fullname = request.POST.get('full_name')
+            gender = request.POST.get('gender')
+            birthDate = request.POST.get('birth_date')
+            address = request.POST.get('address')
+            contactNumber = request.POST.get('contact_number')
+            email = request.POST.get('email')
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            confirmPassword = request.POST.get('confirm_password')
+            
+            if password != confirmPassword:
+                messages.error(request, 'Di parehas ang password, boi!')
+                return redirect('/user/add')
+            
+            Users.objects.create(
+                full_name=fullname,
+                gender=Genders.objects.get(pk=gender),
+                birth_date=birthDate,
+                address=address,
+                contact_number=contactNumber,
+                email=email,
+                username=username,
+                password=make_password(password)    
+            ).save()
+            
+            messages.success(request, 'User added na, boi!')
+            return redirect('/user/add')
+        else:
+            genderObj = Genders.objects.all()
+            
+            data = {
+                'genders': genderObj
+            }
+            
+            return render(request, 'user/AddUser.html', data)
     except Exception as e:
         return HttpResponse(f'Error tanga: {e}')
