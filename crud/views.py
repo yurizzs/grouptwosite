@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -104,7 +107,7 @@ def add_user(request):
             confirmPassword = request.POST.get('confirm_password')
             
             if password != confirmPassword:
-                messages.error(request, 'Di parehas ang password, boi!')
+                messages.error(request, 'Password and Confirm Password do not match!')
                 return redirect('/user/add')
             
             Users.objects.create(
@@ -129,4 +132,71 @@ def add_user(request):
             
             return render(request, 'user/AddUser.html', data)
     except Exception as e:
-        return HttpResponse(f'Error tanga: {e}')
+        return HttpResponse(f'Error bobo: {e}')
+    
+def edit_user(request, userId):
+    try:
+        if request.method == 'POST':
+            userObj = Users.objects.get(pk=userId)
+            
+            fullname = request.POST.get('full_name')
+            gender = request.POST.get('gender')
+            birthDate = request.POST.get('birth_date')
+            address = request.POST.get('address')
+            contactNumber = request.POST.get('contact_number')
+            email = request.POST.get('email')
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            confirmPassword = request.POST.get('confirm_password')
+            
+            if password and confirmPassword:
+                if password != confirmPassword:
+                    messages.error(request, 'mali password mo tanga')
+                    return redirect('/user/edit')
+                userObj.password = make_password(password)
+            
+            userObj.full_name=fullname
+            userObj.gender=Genders.objects.get(pk=gender)
+            userObj.birth_date=birthDate
+            userObj.address=address
+            userObj.contact_number=contactNumber
+            userObj.email=email
+            userObj.username=username
+            userObj.save()
+            
+            messages.success(request, 'User updated boi good job!')
+            return redirect('/user/list')
+        else:
+            userObj = Users.objects.get(pk=userId)
+            genderObj = Genders.objects.all()
+            
+            data = {
+                'user':userObj,
+                'gender':genderObj
+            }
+            
+            return render(request, 'user/EditUser.html', data)
+    except Exception as e:
+        return HttpResponse(f'may error tanga: {e}')
+
+def login_view(request):
+    try:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login successful!')
+                return redirect('/user/list')  # Replace 'home' with your main page URL name
+            else:
+                messages.error(request, 'Invalid username or password.')
+                return render(request, 'user/login.html')
+    except Exception as e:
+        return HttpResponse(f'Error gago: {e}')    
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully.')
+    return redirect('login/')
