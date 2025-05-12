@@ -190,6 +190,20 @@ def edit_user(request, userId):
         messages.error(request, f'An error occurred: {str(e)}')
         return redirect('/user/list')
 
+def delete_user(request, userId):
+    try:
+        user = Users.objects.get(pk=userId)
+        if request.method == 'GET':
+            user.delete()
+            messages.success(request, f"User {user.username} has been deleted.")
+            return redirect('/user/list')
+    except Users.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect('/user/list')
+    except Exception as e:
+        messages.error(request, f"Error deleting user: {e}")
+        return redirect('/user/list')
+
 def login_view(request):
     try:
         if request.method == 'POST':
