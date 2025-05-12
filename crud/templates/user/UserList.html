@@ -32,9 +32,9 @@ Users List
                         <td class="px-6 py-3">{{ user.contact_number }}</td>
                         <td class="px-6 py-3">{{ user.email }}</td>
                         <td class="px-6 py-3">
-                            <div class="inline-flex gap-5 shadow-sm">
-                                <a href="/user/edit/{{ user.user_id}}" class="bg-green-600 px-3 py-2.5 font-medium text-white hover:bg-green-700 rounded-s-sm hover:outline-none">Edit</a>
-                                <a href="#" class="bg-red-600 px-3 py-2.5 font-medium text-white hover:bg-red-700 rounded-s-sm hover:outline-none">Delete</a>
+                            <div class="inline-flex gap-5">
+                                <a href="/user/edit/{{ user.user_id}}" class="bg-green-600 px-3 py-2.5 font-medium text-white hover:bg-green-700 shadow-sm rounded-sm hover:outline-none">Edit</a>
+                                <a href="/user/delete/{{ user.user_id }}" class="bg-red-600 px-3 py-2.5 font-medium text-white hover:bg-red-700 shadow-sm rounded-sm hover:outline-none">Delete</a>
                             </div>
                         </td>
                     </tr>
