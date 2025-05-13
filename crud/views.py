@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -81,17 +82,28 @@ def delete_gender(request, genderId):
     except Exception as e:
         return HttpResponse(f'May Error tanga: {e}')
     
-def user_list(reuqest):
+def user_list(request):
     try:
-        userObj = Users.objects.select_related('gender')
+        # Get all users with their related gender data
+        user_list = Users.objects.select_related('gender').all()
+        
+        # Number of users per page
+        paginator = Paginator(user_list, 10)  # Show 10 users per page
+        
+        # Get the current page number from the request
+        page_number = request.GET.get('page', 1)
+        
+        # Get the page object
+        page_obj = paginator.get_page(page_number)
         
         data = {
-            'users':userObj
+            'users': page_obj,
+            'page_obj': page_obj,  # This will be used in the template for pagination
         }
         
-        return render(reuqest, 'user/UserList.html', data)
+        return render(request, 'user/UserList.html', data)
     except Exception as e:
-        return HttpResponse(f'Error tanga: {e}')
+        return HttpResponse(f'Error: {e}')
     
 def add_user(request):
     try:
