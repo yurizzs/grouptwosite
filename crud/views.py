@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password, check_password
+from datetime import datetime
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -117,6 +118,17 @@ def add_user(request):
             username = request.POST.get('username')
             password = request.POST.get('password')
             confirmPassword = request.POST.get('confirm_password')
+
+            if not birthDate:
+                messages.error(request, 'Birth date is required.')
+                return redirect('/user/add')
+
+            try:
+                # Validate date format
+                birthDate = datetime.strptime(birthDate, '%Y-%m-%d').date()
+            except ValueError:
+                messages.error(request, 'Invalid date format. Please use YYYY-MM-DD format.')
+                return redirect('/user/add')
             
             if password != confirmPassword:
                 messages.error(request, 'Password and Confirm Password do not match!')
