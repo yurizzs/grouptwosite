@@ -4,7 +4,6 @@ from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password, check_password
 
-
 from django.core.paginator import Paginator
 
 def get_user_data(request):
@@ -194,6 +193,36 @@ def add_user(request):
                     }
                 }
                 return render(request, 'user/AddUser.html', data)
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
+                return render(request, 'user/AddUser.html', data)
+            
+            # Check if username already exists
+            if Users.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
+                return render(request, 'user/AddUser.html', data)
             
             Users.objects.create(
                 full_name=fullname,
@@ -236,6 +265,10 @@ def edit_user(request, userId):
             
             if not gender:
                 messages.error(request, 'Please select a gender')
+                return redirect(f'/user/edit/{userId}')
+            
+            if Users.objects.filter(username=username).exclude(user_id=userId).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
                 return redirect(f'/user/edit/{userId}')
             
             if Users.objects.filter(username=username).exclude(user_id=userId).exists():
