@@ -19,6 +19,20 @@ def gender_list(request):
             'genders':genders
         }
         
+        # Number of genders per page
+        paginator = Paginator(genders, 10)  # Show 10 genders per page
+
+        # Get the current page number from the request
+        page_number = request.GET.get('page', 1)
+        
+        # Get the page object
+        page_obj = paginator.get_page(page_number)
+        
+        data = {
+            'genders': page_obj,
+            'page_obj': page_obj,  # This will be used in the template for pagination
+        }
+
         return render(request, 'gender/GenderList.html', data)
     except Exception as e:
         return HttpResponse(f'Error tanga: {e}')
