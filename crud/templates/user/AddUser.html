@@ -12,56 +12,77 @@
         {% csrf_token %}
         <div class="grid grid-cols-2 gap-4 mx-auto">
             <div class="col-span-2 md:col-span-1">
-                <div class="mb-4">
-                    <label for="full_name" class="block text-sm font-medium mb-2">Full Name</label>
-                    <input type="text" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="full_name" id="full_name" value="{{ form_data.full_name|default:''}}" required/>
+                <div class="relative z-0 w-full mb-5 group">
+                  <input type="text" name="full_name" id="full_name" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required value="{{ form_data.full_name|default:'' }}" />
+                  <label for="full_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Full Name</label>
                 </div>
                 <div class="mb-4">
-                    <label for="gender" class="block text-sm font-medium mb-2">Gender</label>
-                    <select name="gender" id="gender" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600">
-                        <option value="">Select Gender</option>
-                        {% for gender in genders %}
-                            <option value=" {{ gender.gender_id }}">{{ gender.gender }}</option>
-                        {% endfor %}
-                            
-                    </select>
+                  <label for="full_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
+                    <select name="gender" id="gender" class="bg-gray-50 border border-blue-700 text-gray-900 text-sm    rounded-lg focus:ring-blue-500 
+                    focus:border-blue-500 block w-full p-2.5 dark:bg-blue-600 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
+                    dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                    {% for gender in genders %}
+                    <option value="{{ gender.gender_id }}">{{ gender.gender }}</option>
+                    {% endfor %} </select>
                 </div>
-                <div class="mb-4">
-                    <label for="birth_date" class="block text-sm font-medium mb-2">Birth Date</label>
-                    <input type="date" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="birth_date" id="birth_date" value="{{ form_data.birth_date|default:'' }}" required />
+                <div class="relative z-0 w-full mb-5 group">
+                  <div class="absolute inset-y-0 start-0 w-full flex items-center pr-1  ps-3.5 pointer-events-none">
+                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
+                        </svg>
+                    </div>
+                 <input datepicker id="default-datepicker" type="date" class="bg-gray-50 border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-blue-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Birth Date" name="birth_date" id="birth_date" required />
+                 </div>
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="address" id="address" value="{{ form_data.address|default:'' }}" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="address" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Address</label>
                 </div>
-                <div class="mb-4">
-                    <label for="address" class="block text-sm font-medium mb-2">Address</label>
-                    <input type="text" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="address" id="address" value="{{ form_data.address|default:'' }}" required />
-                </div>
-                <div class="mb-4">
-                    <label for="contact_number" class="block text-sm font-medium mb-2">Contact Number</label>
-                    <input type="texte" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="contact_number" id="contact_number" value="{{ form_data.contact_number|default:'' }}"required />
+                <div class="relative z-0 w-full mb-5 group">
+                    <input type="text" name="contact_number" id="contact_number" value="{{ form_data.contact_number|default:'' }}" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                    <label for="contact_number" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Contact Number</label>
                 </div>
             </div>
             <div class="col-span-1 md:col-span-1">
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium mb-2">Email</label>
-                    <input type="email" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="email" id="email" value="{{ form_data.email|default:'' }}" />
+                <div class="relative z-0 w-full mb-5 group">
+                  <input type="text" name="email" id="email" value="{{ form_data.email|default:'' }}" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                  <label for="email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Email</label>
+                </div>  
+
+                <div class="relative z-0 w-full mb-5 group">
+                  <input type="text" name="username" id="username" value="{{ form_data.username|default:'' }}" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                  <label for="username" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
                 </div>
-                <div class="mb-4">
-                    <label for="username" class="block text-sm font-medium mb-2">Username</label>
-                    <input type="text" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="username" id="username" value="{{ form_data.username|default:'' }}" required />
-                </div>                 
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium mb-2">Password</label>
-                    <input type="password" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="password" id="password" required />
+
+                <div class="relative z-0 w-full mb-5 group">
+                  <input type="password" name="password" id="password" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                  <label for="password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Passowrd</label>  
                 </div>
-                <div class="mb-4">
-                    <label for="confirm_password" class="block text-sm font-medium mb-2">Confirm Password</label>
-                    <input type="password" class="bg-white mb-2 px-3 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="confirm_password" id="confirm_password" required />
+
+
+                <div class="relative z-0 w-full mb-5 group">
+                  <input type="password" name="confirm_password" id="confirm_password" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+                  <label for="confirm_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Comfirm Password</label>
                 </div>
             </div>
         </div>
+
         <div class="flex justify-end">
-            <button type="submit" class="bg-green-400 hover:bg-green-500 text-sm font-medium text-white px-3 py-2.5 rounded-sm shadow-sm cursor-pointer">Save User</button>
+          <button type="submit" class="cursor-pointer relative inline-flex items-center justify-end p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+            <span class="w-full border relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-blue-500 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">
+            Save User</span>
+          </button>
         </div>
+
     </form>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    flatpickr("#default-datepicker", {
+      dateFormat: "Y-m-d",
+      allowInput: false,
+      required: true
+    });
+  });
+</script>
 
 {% endblock 'content' %}
