@@ -11,15 +11,15 @@
         <table class="w-full">
             <thead class="text-xs text-left text-white bg-blue-600">
                 <tr>
-                    <th class="px-14 py-3">Gender</th>
-                    <th class="px-14 py-3">Action</th>
+                    <th class="px-6 py-3">Gender</th>
+                    <th class="px-6 py-3">Action</th>
                 </tr>
             </thead>
             <tbody class="text-xs text-black">
                 {% for gender in genders %}
                     <tr class="hover:bg-gray-100 border b border-gray-200">
-                        <td class="px-14 py-3">{{ gender.gender }}</td>
-                        <td class="px-14 py-3">
+                        <td class="px-6 py-3">{{ gender.gender }}</td>
+                        <td class="px-6 py-3">
                             <div class="inline-flex shadow-sm"> 
                                 <a href="/gender/edit/{{ gender.gender_id }}" class="bg-green-500 px-3 py-2.5 font-medium text-white hover:bg-green-600 hover:outline-none rounded-s-sm">Edit</a>
                                 <a href="/gender/delete/{{ gender.gender_id }}" class="bg-red-500 px-3 py-2.5 font-medium text-white hover:bg-red-600 hover:outline-none rounded-e-sm">Delete</a>

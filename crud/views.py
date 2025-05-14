@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password, check_password
+
 from django.core.paginator import Paginator
 
 def get_user_data(request):
@@ -24,6 +25,20 @@ def gender_list(request):
             'genders':genders
         }
         
+        # Number of genders per page
+        paginator = Paginator(genders, 10)  # Show 10 genders per page
+
+        # Get the current page number from the request
+        page_number = request.GET.get('page', 1)
+        
+        # Get the page object
+        page_obj = paginator.get_page(page_number)
+        
+        data = {
+            'genders': page_obj,
+            'page_obj': page_obj,  # This will be used in the template for pagination
+        }
+
         return render(request, 'gender/GenderList.html', data)
     except Exception as e:
         return HttpResponse(f'Error tanga: {e}')
@@ -96,15 +111,15 @@ def user_list(request):
         
         if search_query:
             user_list = user_list.filter(
-                full_name_icontains=search_query
+                full_name__icontains=search_query
             ) | user_list.filter(
-                username_icontains=search_query
+                username__icontains=search_query
             ) | user_list.filter(
-                email_icontains=search_query
+                email__icontains=search_query
             )
             
         # Number of users per page
-        paginator = Paginator(user_list, 10)  # Show 10 users per page
+        paginator = Paginator(user_list, 6)  # Show 10 users per page
         
         # Get the current page number from the request
         page_number = request.GET.get('page', 1)
@@ -137,7 +152,36 @@ def add_user(request):
             
             if password != confirmPassword:
                 messages.error(request, 'Password and Confirm Password do not match!')
-                return redirect('/user/add')
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
+                return render(request, 'user/AddUser.html', data)
+            
+            # Check if username already exists
+            if Users.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
+                return render(request, 'user/AddUser.html', data)
             
             Users.objects.create(
                 full_name=fullname,
@@ -180,6 +224,10 @@ def edit_user(request, userId):
             
             if not gender:
                 messages.error(request, 'Please select a gender')
+                return redirect(f'/user/edit/{userId}')
+            
+            if Users.objects.filter(username=username).exclude(user_id=userId).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
                 return redirect(f'/user/edit/{userId}')
             
             if password and confirmPassword:
@@ -252,7 +300,6 @@ def login_view(request):
                 if check_password(password, user.password):
                     request.session['user_id'] = user.user_id
                     request.session['username'] = user.username
-                    messages.success(request, 'Login successful!')
                     messages.success(request, f'Welcome Master {user.full_name}!')
                     return redirect('/user/list')
                 else:
