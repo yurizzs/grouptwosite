@@ -192,20 +192,6 @@ def add_user(request):
                         'username': username
                     }
                 }
-                return render(request, 'user/AddUser.html', data)
-                data = {
-                    'genders': Genders.objects.all(),
-                    'form_data': {
-                        'full_name': fullname,
-                        'gender': gender,
-                        'birth_date': birthDate,
-                        'address': address,
-                        'contact_number': contactNumber,
-                        'email': email,
-                        'username': username
-                    }
-                }
-                return render(request, 'user/AddUser.html', data)
             
             # Check if username already exists
             if Users.objects.filter(username=username).exists():
