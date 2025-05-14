@@ -176,7 +176,7 @@ def add_user(request):
             ).save()
             
             messages.success(request, 'User added na, boi!')
-            return redirect('/user/add')
+            return redirect('/user/list')
         else:
             genderObj = Genders.objects.all()
             
