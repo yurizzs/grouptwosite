@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password, check_password
+
 from django.core.paginator import Paginator
 
 def get_user_data(request):
@@ -129,7 +130,11 @@ def user_list(request):
             )
             
         # Number of users per page
+<<<<<<< HEAD
         paginator = Paginator(user_list, 8)  # Show 10 users per page
+=======
+        paginator = Paginator(user_list, 6)  # Show 10 users per page
+>>>>>>> 21db0f198447afc0836bc3ae1263462a2a837eba
         
         # Get the current page number from the request
         page_number = request.GET.get('page', 1)
@@ -162,7 +167,36 @@ def add_user(request):
             
             if password != confirmPassword:
                 messages.error(request, 'Password and Confirm Password do not match!')
-                return redirect('/user/add')
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
+                return render(request, 'user/AddUser.html', data)
+            
+            # Check if username already exists
+            if Users.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
+                return render(request, 'user/AddUser.html', data)
             
             Users.objects.create(
                 full_name=fullname,
@@ -205,6 +239,10 @@ def edit_user(request, userId):
             
             if not gender:
                 messages.error(request, 'Please select a gender')
+                return redirect(f'/user/edit/{userId}')
+            
+            if Users.objects.filter(username=username).exclude(user_id=userId).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
                 return redirect(f'/user/edit/{userId}')
             
             if password and confirmPassword:
@@ -307,7 +345,6 @@ def login_view(request):
                 if check_password(password, user.password):
                     request.session['user_id'] = user.user_id
                     request.session['username'] = user.username
-                    messages.success(request, 'Login successful!')
                     messages.success(request, f'Welcome Master {user.full_name}!')
                     return redirect('/user/list')
                 else:
