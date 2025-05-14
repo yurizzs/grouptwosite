@@ -3,10 +3,16 @@ from django.http import HttpResponse
 from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password, check_password
-from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+
+def get_user_data(request):
+    if 'user_id' in request.session:
+        try:
+            user = Users.objects.get(user_id=request.session['user_id'])
+            return {'current_user': user}
+        except Users.DoesNotExist:
+            return {'current_user': None}
+    return {'current_user': None}
 
 # Create your views here.
 
@@ -84,9 +90,19 @@ def delete_gender(request, genderId):
     
 def user_list(request):
     try:
+        search_query = request.GET.get('search', '')
         # Get all users with their related gender data
         user_list = Users.objects.select_related('gender').all()
         
+        if search_query:
+            user_list = user_list.filter(
+                full_name_icontains=search_query
+            ) | user_list.filter(
+                username_icontains=search_query
+            ) | user_list.filter(
+                email_icontains=search_query
+            )
+            
         # Number of users per page
         paginator = Paginator(user_list, 10)  # Show 10 users per page
         
@@ -98,7 +114,8 @@ def user_list(request):
         
         data = {
             'users': page_obj,
-            'page_obj': page_obj,  # This will be used in the template for pagination
+            'page_obj': page_obj,# This will be used in the template for pagination
+            'search_query':search_query
         }
         
         return render(request, 'user/UserList.html', data)
@@ -204,8 +221,16 @@ def edit_user(request, userId):
 
 def delete_user(request, userId):
     try:
-        user = Users.objects.get(pk=userId)
         if request.method == 'GET':
+            user = Users.objects.get(pk=userId)
+            genderObj = Genders.objects.all()
+            data = {
+                'user': user,
+                'gender': genderObj
+            }
+            return render(request, 'user/DeleteUser.html', data)
+        else:
+            user = Users.objects.get(pk=userId)
             user.delete()
             messages.success(request, f"User {user.username} has been deleted.")
             return redirect('/user/list')
@@ -228,6 +253,7 @@ def login_view(request):
                     request.session['user_id'] = user.user_id
                     request.session['username'] = user.username
                     messages.success(request, 'Login successful!')
+                    messages.success(request, f'Welcome Master {user.full_name}!')
                     return redirect('/user/list')
                 else:
                     messages.error(request, 'Invalid username or password.')
@@ -243,5 +269,5 @@ def login_view(request):
 
 def logout_view(request):
     request.session.flush()
-    messages.success(request, 'You have been logged out successfully.')
+    # messages.success(request, 'You have been logged out successfully.')
     return redirect('/login/')

@@ -1,5 +1,4 @@
 
-
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
@@ -23,29 +22,27 @@
                   <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                 </button>
               </div>
-              <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
-                <div class="px-4 py-3" role="none">
-                  <p class="text-sm text-gray-900 dark:text-white" role="none">
-                    Neil Sims
-                  </p>
-                  <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                    neil.sims@flowbite.com
+              <div class="z-50 items-center hidden w-64 text-base list-none rounded-md shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+                <div class="flex flex-col gap-5 mt-5 mb-3 justify-center items-center">
+                  <img class="w-20 h-20 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                  <p class="text-lg font-semibold text-white">
+                    Hi, {% if current_user %}
+                      {{ current_user.full_name }}!
+                    {% endif %}
                   </p>
                 </div>
-                <ul class="py-1" role="none">
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Gender List</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Earnings</a>
-                  </li>
-                  <li>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
-                  </li>
-                </ul>
+                <div class="divide-y divide-gray-500 gap-5 border-t-1 border-gray-200 dark:border-gray-500">
+                  <div class="flex justify-center items-center px-4 py-3" role="none">
+                    <p class="text-sm text-gray-900 dark:text-white " role="none">
+                      {{ request.session.username}}
+                    </p>
+                  </div>
+                  <ul class="flex justify-center py-1" role="none">
+                    <li>
+                      <a href="/logout/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -57,25 +54,49 @@
      <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
         <ul class="space-y-2 font-medium">
            <li>
-              <a href="/gender/list" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group">
+              <a href="/gender/list" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group menu-item">
                  <span class="ms-3">Gender List</span>
               </a>
            </li>
            <li>
-              <a href="/gender/add" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group">
+              <a href="/gender/add" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group menu-item">
                  <span class="flex-1 ms-3 whitespace-nowrap">Add Gender</span>
               </a>
            </li>
            <li>
-              <a href="/user/list" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group">
+              <a href="/user/list" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group menu-item">
                  <span class="flex-1 ms-3 whitespace-nowrap">User List</span>
               </a>
            </li>
            <li>
-              <a href="/user/add" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group">
+              <a href="/user/add" class="flex items-center p-2 text-black rounded-lg hover:bg-gray-100 group menu-item">
                  <span class="flex-1 ms-3 whitespace-nowrap">Add User</span>
               </a>
            </li>
         </ul>
      </div>
   </aside>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuItems = document.querySelectorAll('.menu-item');
+      
+      // Get current path
+      const currentPath = window.location.pathname;
+      
+      // Set active class based on current path
+      menuItems.forEach(item => {
+        if (item.getAttribute('href') === currentPath) {
+          item.classList.add('bg-gray-100');
+        }
+        
+        // Add click event listener
+        item.addEventListener('click', function() {
+          // Remove active class from all items
+          menuItems.forEach(i => i.classList.remove('bg-gray-100'));
+          // Add active class to clicked item
+          this.classList.add('bg-gray-100');
+        });
+      });
+    });
+  </script>
