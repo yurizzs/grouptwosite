@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Genders, Users
 from django.contrib.auth.hashers import make_password, check_password
 
+
 from django.core.paginator import Paginator
 
 def get_user_data(request):
@@ -130,12 +131,8 @@ def user_list(request):
             )
             
         # Number of users per page
-<<<<<<< HEAD
-        paginator = Paginator(user_list, 8)  # Show 10 users per page
-=======
-        paginator = Paginator(user_list, 6)  # Show 10 users per page
->>>>>>> 21db0f198447afc0836bc3ae1263462a2a837eba
-        
+        paginator = Paginator(user_list, 6)  # Show users per page
+
         # Get the current page number from the request
         page_number = request.GET.get('page', 1)
         
