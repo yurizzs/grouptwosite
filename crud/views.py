@@ -19,14 +19,24 @@ def get_user_data(request):
 
 def gender_list(request):
     try:
+        search_query = request.GET.get('search', '')
+        # Get all users with their related gender data
         genders = Genders.objects.all()
         
         data = {
             'genders':genders
         }
         
-        # Number of genders per page
-        paginator = Paginator(genders, 10)  # Show 10 genders per page
+        if search_query:
+            genders = genders.filter(
+                gender__sicontains=search_query
+            )
+
+        search_query = request.GET.get('search', '')
+        # Get all users with their related gender data
+
+        # Number of users per page
+        paginator = Paginator(genders, 10)  # Show 10 users per page
 
         # Get the current page number from the request
         page_number = request.GET.get('page', 1)
@@ -36,9 +46,10 @@ def gender_list(request):
         
         data = {
             'genders': page_obj,
-            'page_obj': page_obj,  # This will be used in the template for pagination
+            'page_obj': page_obj,# This will be used in the template for pagination
+            'search_query':search_query
         }
-
+        
         return render(request, 'gender/GenderList.html', data)
     except Exception as e:
         return HttpResponse(f'Error tanga: {e}')
@@ -195,7 +206,7 @@ def add_user(request):
             ).save()
             
             messages.success(request, 'User added na, boi!')
-            return redirect('/user/add')
+            return redirect('/user/list')
         else:
             genderObj = Genders.objects.all()
             
