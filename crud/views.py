@@ -121,11 +121,11 @@ def user_list(request):
         
         if search_query:
             user_list = user_list.filter(
-                full_name_icontains=search_query
+                full_name__icontains=search_query
             ) | user_list.filter(
-                username_icontains=search_query
+                username__icontains=search_query
             ) | user_list.filter(
-                email_icontains=search_query
+                email__icontains=search_query
             )
             
         # Number of users per page
