@@ -36,7 +36,7 @@ def gender_list(request):
         # Get all users with their related gender data
 
         # Number of users per page
-        paginator = Paginator(genders, 10)  # Show 10 users per page
+        paginator = Paginator(genders, 8)  # Show 10 users per page
 
         # Get the current page number from the request
         page_number = request.GET.get('page', 1)
@@ -130,8 +130,8 @@ def user_list(request):
             )
             
         # Number of users per page
-        paginator = Paginator(user_list, 6)  # Show 10 users per page
-        
+        paginator = Paginator(user_list, 6)  # Show users per page
+
         # Get the current page number from the request
         page_number = request.GET.get('page', 1)
         
@@ -176,6 +176,22 @@ def add_user(request):
                     }
                 }
                 return render(request, 'user/AddUser.html', data)
+            
+            # Check if username already exists
+            if Users.objects.filter(username=username).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
+                data = {
+                    'genders': Genders.objects.all(),
+                    'form_data': {
+                        'full_name': fullname,
+                        'gender': gender,
+                        'birth_date': birthDate,
+                        'address': address,
+                        'contact_number': contactNumber,
+                        'email': email,
+                        'username': username
+                    }
+                }
             
             # Check if username already exists
             if Users.objects.filter(username=username).exists():
@@ -241,6 +257,10 @@ def edit_user(request, userId):
                 messages.error(request, 'Username already exists. Please choose a different username.')
                 return redirect(f'/user/edit/{userId}')
             
+            if Users.objects.filter(username=username).exclude(user_id=userId).exists():
+                messages.error(request, 'Username already exists. Please choose a different username.')
+                return redirect(f'/user/edit/{userId}')
+            
             if password and confirmPassword:
                 if password != confirmPassword:
                     messages.error(request, 'Password and Confirm Password do not match!')
@@ -277,6 +297,36 @@ def edit_user(request, userId):
     except Exception as e:
         messages.error(request, f'An error occurred: {str(e)}')
         return redirect('/user/list')
+
+def password_change(request, userId):
+    try:
+        if request.method == 'GET':
+            user = Users.objects.get(pk=userId)
+            return render(request, 'user/PassChange.html', {'user': user})
+        elif request.method == 'POST':
+            user = Users.objects.get(pk=userId)
+            password = request.POST.get('password')
+            confirmPassword = request.POST.get('confirm_password')
+
+            # Debugging: check if data is received
+            print(f"Password: {password}, Confirm: {confirmPassword}")
+
+            if not password or not confirmPassword:
+                messages.error(request, 'Please fill out both password fields.')
+                return redirect(f'/user/passwordchange/{userId}')
+
+            if password != confirmPassword:
+                messages.error(request, 'Password and Confirm Password do not match!')
+                return redirect(f'/user/passwordchange/{userId}')
+
+            user.password = make_password(password)
+            user.save()
+            messages.success(request, 'Password changed successfully!')
+            return redirect('/user/list')
+        else:
+            return render(request, 'user/PassChange.html')
+    except Exception as e:
+        return HttpResponse(f'Error url: {e}')
 
 def delete_user(request, userId):
     try:
