@@ -29,7 +29,7 @@ Users List
                    <th class="px-6 py-3">Address</th>
                    <th class="px-6 py-3">Contact Number</th>
                    <th class="px-6 py-3">Email</th>
-                   <th class="px-6 py-3">Action</th>
+                   <th class="px-9 py-3">Action</th>
                 </tr>
             </thead>
             <tbody class="text-xs text-black">
@@ -45,6 +45,7 @@ Users List
                             <div class="flex justify-evenly">
                                 <a href="/user/edit/{{ user.user_id }}" class="bg-green-500 px-3 py-2.5 font-medium text-white hover:bg-green-600 hover:outline-none rounded-sm">Edit</a>
                                 <a href="/user/delete/{{ user.user_id }}" class="bg-red-500 px-3 py-2.5 font-medium text-white hover:bg-red-600 hover:outline-none rounded-sm">Delete</a>
+                                <a href="/user/passwordchange/{{ user.user_id }}" class="bg-sky-500 text-xs font-medium text-white px-3 py-2.5 rounded-sm hover:bg-sky-600 hover:outline-none">Change Password</a>
                             </div>
                         </td>
                     </tr>
