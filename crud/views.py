@@ -375,7 +375,7 @@ def login_view(request):
                     request.session['user_id'] = user.user_id
                     request.session['username'] = user.username
                     messages.success(request, f'Welcome Master {user.full_name}!')
-                    return redirect('/user/list')
+                    return redirect('/gender/list')
                 else:
                     messages.error(request, 'Invalid username or password.')
                     return render(request, 'user/login.html')

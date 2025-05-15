@@ -6,13 +6,19 @@
 {% include 'include/Sidebar.html' %}
 {% include 'include/ToastMessage.html' %}
 
-<div class="p-2 sm:ml-64 mt-16 md:mt-14">
+<div class="p-2 sm:ml-64 mt-16 md:mt-14 h-screen flex items-center">
     <form action="/gender/add" method="post">
         {% csrf_token %}
         <div class="mx-auto w-ful md:w-1/3 mb-2">
-            <label for="gender" class="block text-sm font-medium mb-2">Gender</label>
-            <input type="text" class="bg-white mb-2 px-2 py-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" name="gender" id="gender"/>
-            <div class="flex justify-end">
+
+            <div>
+                <img class="rounded-sm" src="https://cdn.dribbble.com/userupload/28302971/file/original-13047d68b80ce0ed9420d4ca9a82fcff.png?resize=1024x663&vertical=center" alt="image">
+            </div>
+            <div class="relative mt-4">
+                <input name="gender" type="text" id="gender" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-white bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:border-green-400 dark:focus:border-green-600 focus:outline-none focus:ring-0 focus:border-green-600 peer" placeholder=" " />
+                <label for="gender" class="absolute text-sm rounded-md text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-green-600 peer-focus:dark:text-green-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Add Gender</label>
+            </div>
+            <div class="flex justify-center mt-4">
                 <button type="submit" class="bg-green-600 hover:bg-green-700 text-sm font-medium text-white px-3 py-2.5 rounded-sm shadow-sm cursor-pointer">Save Gender</button>
             </div>
         </div>
