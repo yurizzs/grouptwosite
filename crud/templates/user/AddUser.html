@@ -26,13 +26,9 @@
                     {% endfor %} </select>
                 </div>
                 <div class="relative z-0 w-full mb-5 group">
-                  <div class="absolute inset-y-0 start-0 w-full flex items-center pr-1  ps-3.5 pointer-events-none">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"/>
-                        </svg>
-                    </div>
-                 <input datepicker id="default-datepicker" type="date" class="bg-gray-50 border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-blue-600 dark:placeholder-white dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Birth Date" name="birth_date" id="birth_date" required />
-                 </div>
+                  <input value="{{ form_data.birth_date|default:' '}}" id="birth_date" type="date" name="birth_date" class="bg-white mb-2 px-3 ypy-2.5 border border-gray-300 text-black block text-sm rounded-sm w-full focus:outline-none focus:ring-blue-600 focus:border-blue-600" required>
+                  <label for="birth_date" class="block text-sm font-medium mb-2">Birthdate</label>
+                </div>
                 <div class="relative z-0 w-full mb-5 group">
                     <input type="text" name="address" id="address" value="{{ form_data.address|default:'' }}" class="block py-2.5 px-0 w-full text-sm text-gray-900  border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
                     <label for="address" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Address</label>
@@ -75,14 +71,6 @@
 
     </form>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    flatpickr("#default-datepicker", {
-      dateFormat: "Y-m-d",
-      allowInput: false,
-      required: true
-    });
-  });
-</script>
+
 
 {% endblock 'content' %}
