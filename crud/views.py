@@ -296,7 +296,7 @@ def edit_user(request, userId):
 @custom_login_required
 def password_change(request, userId):
     try:
-        if request.method == 'GET':
+        if request.method == 'POST':
             user = Users.objects.get(pk=userId)
             current_password = request.POST.get('current_password')
             password = request.POST.get('password')
@@ -321,9 +321,13 @@ def password_change(request, userId):
             return redirect('/user/list')
         else:
             user = Users.objects.get(pk=userId)
-            return render(request, 'user/PassChange.html', {'user':user})
+            return render(request, 'user/PassChange.html', {'user': user})
+    except Users.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect('/user/list')
     except Exception as e:
-        return HttpResponse(f'Error url: {e}')
+        messages.error(request, f"Error changing password: {e}")
+        return redirect('/user/list')
 
 @custom_login_required
 def delete_user(request, userId):
